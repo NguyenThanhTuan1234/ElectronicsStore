@@ -1,6 +1,7 @@
 package logic;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -30,8 +31,14 @@ public class BillLogic {
 		HashMap <Integer, Integer> map = productDao.getProductMap();
 		JSONObject jsonOb;
 		try {
-			FileOutputStream fosp = new FileOutputStream(productFile);
-			FileOutputStream fosc = new FileOutputStream(categoryFile);
+			File myProductFile = new File(productFile);
+			myProductFile.createNewFile();
+			
+			File myCategoryFile = new File(categoryFile);
+			myCategoryFile.createNewFile();
+			
+			FileOutputStream fosp = new FileOutputStream(myProductFile);
+			FileOutputStream fosc = new FileOutputStream(myCategoryFile);
 			PrintWriter pwp = new PrintWriter(fosp);
 			PrintWriter pwc = new PrintWriter(fosc);
 			List<Bill> billList = billDao.getListBill(numberTrans);
@@ -134,7 +141,7 @@ public class BillLogic {
 	
 	public static void main(String []args) {
 		BillLogic billLogic = new BillLogic();
-//		billLogic.writeTransactionToFile(Constant.NUMBER_TRANSACTION, Constant.PRODUCT_INPUT_FILE, Constant.SUB_CATEGORY_INPUT_FILE);
+		billLogic.writeTransactionToFile(Constant.NUMBER_TRANSACTION, Constant.PRODUCT_INPUT_FILE, Constant.SUB_CATEGORY_INPUT_FILE);
 		billLogic.exportBillToFile("bill_export");
 //		billLogic.importBillFromFile("bill_export");
 	}

@@ -97,7 +97,7 @@ public class ProductRuleDao extends DbManager{
 	}
 	public static void main(String []agrs){
 		ProductRuleDao dao = new ProductRuleDao();
-//		dao.insertRule(1, 4, 123, 0.33333);
+		dao.insertRule(1, 4, 123, 0.33333);
 		dao.getAllRule();
 	}
 }
