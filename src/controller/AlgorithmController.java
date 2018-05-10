@@ -43,8 +43,9 @@ public class AlgorithmController extends HttpServlet {
 		
 		if("category".equals(level)){
 			SubCategoryRuleLogic subCategoryRuleLogic = new SubCategoryRuleLogic();
-//			rules = algo.generateRulesByFPGrowth(Constant.SUB_CATEGORY_INPUT_FILE, min_sup, min_conf);
+//		rules = algo.generateRulesByFPGrowth(Constant.SUB_CATEGORY_INPUT_FILE, min_sup, min_conf);
 			rules = algo.generateRulesByPascal(Constant.SUB_CATEGORY_INPUT_FILE, min_sup, min_conf);
+//			rules = algo.generateRulesByApriori(Constant.PRODUCT_INPUT_FILE, min_sup, min_conf);
 			subCategoryRuleLogic.insertRules(rules);
 			File f = new File(Constant.SUB_CATEGORY_INPUT_FILE);
 		    f.delete();
@@ -52,8 +53,9 @@ public class AlgorithmController extends HttpServlet {
 			
 		}else {
 			ProductRuleLogic productRuleLogic = new ProductRuleLogic();
-//			rules = algo.generateRulesByFPGrowth(Constant.PRODUCT_INPUT_FILE, min_sup, min_conf);
+//		rules = algo.generateRulesByFPGrowth(Constant.PRODUCT_INPUT_FILE, min_sup, min_conf);
 			rules = algo.generateRulesByPascal(Constant.PRODUCT_INPUT_FILE, min_sup, min_conf);
+//			rules = algo.generateRulesByApriori(Constant.PRODUCT_INPUT_FILE, min_sup, min_conf);
 			productRuleLogic.insertRules(rules);
 			File f = new File(Constant.PRODUCT_INPUT_FILE);
 		    f.delete();

@@ -32,6 +32,8 @@ import java.util.Map.Entry;
 
 import ca.pfv.spmf.algorithms.ArraysAlgos;
 import ca.pfv.spmf.algorithms.frequentpatterns.apriori_HT.ItemsetHashTree;
+import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemset;
+import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 import ca.pfv.spmf.tools.MemoryLogger;
 
 /**
@@ -74,7 +76,8 @@ public class AlgoPASCAL {
 
 	// an in-memory representation of the transaction database
 	private List<int[]> database = null;
-
+	
+	public Itemsets patterns;
 	// write to file
 	BufferedWriter writer = null;
         public int transactionCount;
@@ -83,6 +86,13 @@ public class AlgoPASCAL {
 	 */
 	public AlgoPASCAL() {
 
+	}
+	
+	public List<Itemset> convertToItemset(List<ItemsetPascal> pascals) {
+		List<Itemset> list_item = new ArrayList<Itemset>();
+		for(ItemsetPascal itempas: pascals)
+			list_item.add((Itemset) itempas);
+		return list_item;
 	}
 
 	/**
@@ -94,15 +104,26 @@ public class AlgoPASCAL {
 	 *            path to the input file
 	 * @param output
 	 *            path to save the result to an output file
+	 * @return 
 	 * @throws IOException
 	 *             if an error while reading/writing files
 	 */
-	public void runAlgorithm(double minsup, String input, String output) throws IOException {
+	public Itemsets runAlgorithm(double minsup, String input, String output) throws IOException {
+		
+		// if the user want to keep the result into memory
+		if(output == null){
+			writer = null;
+			patterns =  new Itemsets("FREQUENT ITEMSETS");
+	    }else{ // if the user want to save the result to a file
+			patterns = null;
+			writer = new BufferedWriter(new FileWriter(output)); 
+		}
+		
 		// record start time
 		//startTimestamp = System.currentTimeMillis();
-
+		
 		// prepare object for writing the file
-		writer = new BufferedWriter(new FileWriter(output));
+//		writer = new BufferedWriter(new FileWriter(output));
 
 		// reset statistics
 		itemsetCount = 0;
@@ -205,7 +226,7 @@ public class AlgoPASCAL {
 
 		// if no frequent item, we stop there!
 		if (frequent1.size() == 0) {
-			return;
+			return patterns ;
 		}
 
 		// increase the number of candidates
@@ -330,6 +351,7 @@ public class AlgoPASCAL {
 		if (writer != null) {
 			writer.close();
 		}
+		return patterns ;
 	}
 
 	/**
@@ -511,10 +533,15 @@ public class AlgoPASCAL {
 	 * @throws IOException
 	 */
 	void saveItemsetToFile(ItemsetPascal itemset) throws IOException {
+		if(writer!= null){
 		writer.write(itemset.toString() + " #SUP: "
 				+ itemset.getAbsoluteSupport() + " #IS_GENERATOR " + itemset.isGenerator);
 		writer.newLine();
 		itemsetCount++;
+		}
+		else{
+			patterns.addItemset(itemset, itemset.size());
+		}
 	}
 
 	/**
